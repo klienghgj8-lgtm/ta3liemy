@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10192f">
+  <meta name="description" content="أداة مجانية تساعدك على تلخيص درس واستخراج أهم نقاطه من نص أو ملف PDF قصير.">
+  <title>ملخّص الدرس | تعليمي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <style>
+    :root{color-scheme:dark;--bg:#10192f;--panel:#17233d;--panel2:#1d2b49;--text:#f4f6fb;--muted:#a8b5ce;--accent:#8c7bff;--mint:#55d6be;--border:rgba(255,255,255,.12);--danger:#ffabab}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% 0%,#253968 0,transparent 42%),var(--bg);color:var(--text);font-family:'Cairo',system-ui,sans-serif;line-height:1.8}.wrap{width:min(900px,calc(100% - 28px));margin:auto;padding:24px 0 56px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.brand,.back{color:var(--text);text-decoration:none}.brand{font-weight:800;font-size:19px}.brand span{color:var(--mint)}.back{color:#d8d3ff;font-size:14px}.hero{margin-bottom:22px}.eyebrow{color:var(--mint);font-size:13px;font-weight:700}h1{font-size:clamp(27px,5vw,40px);line-height:1.35;margin:6px 0 10px}.hero p,.note{color:var(--muted);margin:0}.card{background:rgba(23,35,61,.96);border:1px solid var(--border);border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 16px 45px #0002}.card h2{font-size:19px;margin:0 0 12px}.drop{display:block;padding:20px;border:1px dashed #8c7bffb3;background:#8c7bff14;border-radius:14px;cursor:pointer;text-align:center}.drop strong,.drop small{display:block}.drop small{color:var(--muted);margin-top:4px}input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}textarea{width:100%;min-height:190px;resize:vertical;border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);background:#111c32;font:inherit;outline:none}textarea:focus{border-color:var(--accent)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:0;border-radius:11px;padding:11px 18px;cursor:pointer;font:700 15px 'Cairo',sans-serif}.primary{background:linear-gradient(135deg,#9a86ff,#6c5ce7);color:white}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}button:disabled{opacity:.55;cursor:wait}#status{min-height:28px;margin:10px 0 0;color:var(--muted);font-size:14px}#status.error{color:var(--danger)}#results[hidden]{display:none}.result-block{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:14px}.result-block h3{font-size:17px;margin:0 0 8px}.result-block p{margin:0;white-space:pre-wrap}ul{margin:0;padding-right:22px}li+li{margin-top:6px}.foot{margin-top:18px;color:var(--muted);font-size:13px}@media(max-width:600px){.wrap{padding-top:18px}.card{padding:16px}.actions button{flex:1}header{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header><a class="brand" href="./">تعليمي<span>.</span></a><a class="back" href="./">العودة للمنصة</a></header>
+    <main>
+      <section class="hero"><div class="eyebrow">أداة مذاكرة مجانية</div><h1>لخّص درسَك وحدد أهم نقاطه</h1><p>ارفع ملف PDF قصيرًا أو الصق نص الدرس لتحصل على خلاصة ونقاط تركيز وأسئلة للمراجعة.</p></section>
+      <section class="card" aria-labelledby="inputTitle">
+        <h2 id="inputTitle">١. أضف محتوى الدرس</h2>
+        <label class="drop" for="fileInput"><strong>اضغط لاختيار ملف PDF أو TXT</strong><small>PDF حتى صفحتين. تتم معالجة الملف داخل متصفحك ولا يُرفع إلى خادم.</small></label>
+        <input id="fileInput" type="file" accept=".pdf,.txt,application/pdf,text/plain">
+        <p id="fileName" class="note" aria-live="polite"></p>
+        <p class="note">أو الصق نص الدرس هنا:</p>
+        <textarea id="sourceText" placeholder="الصق نص الدرس هنا..." aria-label="نص الدرس"></textarea>
+        <div class="actions"><button id="summarizeBtn" class="primary" type="button">استخرج الملخص والنقاط</button><button id="clearBtn" class="secondary" type="button">مسح المحتوى</button></div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </section>
+      <section id="results" class="card" aria-live="polite" hidden>
+        <h2>٢. خلاصة الدرس</h2>
+        <div class="result-block"><h3>الملخص</h3><p id="summary"></p></div>
+        <div class="result-block"><h3>نقاط مهمة للمذاكرة</h3><ul id="keyPoints"></ul></div>
+        <div class="result-block"><h3>أسئلة تراجع بها نفسك</h3><ul id="reviewQuestions"></ul></div>
+        <p class="foot">هذه أداة تلخيص آلية وليست نموذج ذكاء اصطناعي؛ راجع النتائج مع الدرس.</p>
+        <div class="actions"><button id="copyBtn" class="secondary" type="button">نسخ الملخص والنقاط</button></div>
+      </section>
+      <p class="foot">ملفات PDF المصوّرة التي لا تحتوي نصًا قابلًا للتحديد تحتاج OCR ولا تدعمها هذه النسخة. تحتاج قراءة PDF إلى اتصال بالإنترنت لتحميل مكتبة القراءة.</p>
+    </main>
+  </div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fileInput = $('fileInput'), sourceText = $('sourceText'), fileName = $('fileName'), status = $('status'), summarizeBtn = $('summarizeBtn'), results = $('results');
+  const stopWords = new Set('في من على الى عن مع هو هي هذا هذه ذلك التي الذي ما ماذا كيف هل ثم او و به لها له كان تكون يتم حيث عند بين بعد قبل كل بعض فقط مثل كما ان ان اذا قد لقد لا لم لن الي'.split(' '));
+  let selectedFile = null;
+  function setStatus(message, error = false) { status.textContent = message; status.classList.toggle('error', error); }
+  function normalize(text) { return String(text).toLowerCase().normalize('NFKD').replace(/[\u064B-\u065F\u0670\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim(); }
+  function splitSentences(text) { return text.replace(/\r/g, '\n').split(/(?<=[.!؟?؛;\n])\s*/u).map(s => s.replace(/\s+/g, ' ').trim()).filter(s => s.length >= 30); }
+  function makeSummary(text) {
+    const sentences = splitSentences(text);
+    if (!sentences.length) throw new Error('النص قصير أو لا يحتوي جملًا واضحة. أضف نصًا أطول.');
+    const counts = new Map();
+    normalize(text).split(' ').forEach(word => { if (word.length > 2 && !stopWords.has(word) && !/^\d+$/.test(word)) counts.set(word, (counts.get(word) || 0) + 1); });
+    const keywords = [...counts].sort((a,b) => b[1]-a[1]).slice(0,12).map(([word]) => word);
+    const ranked = sentences.map((sentence,index) => {
+      const words = new Set(normalize(sentence).split(' '));
+      let score = keywords.reduce((sum,word) => sum + (words.has(word) ? 1 : 0),0);
+      if (/(تعريف|يعرف|يقصد|ينقسم|يتكون|يسمى|نتيجة|سبب|خصائص|مميزات|قانون|قاعدة|مثال|يجب|لذلك)/u.test(sentence)) score += 2;
+      if (index < Math.max(2,sentences.length*.15)) score += .7;
+      if (sentence.length > 50 && sentence.length < 260) score += .5;
+      if (sentence.length > 420) score -= 1;
+      return {sentence,index,score};
+    });
+    const count = Math.min(6,Math.max(2,Math.ceil(sentences.length*.22)));
+    const points = ranked.sort((a,b) => b.score-a.score).slice(0,count).sort((a,b) => a.index-b.index).map(item => item.sentence);
+    const questions = points.slice(0,4).map((point,index) => {
+      const terms = point.split(/\s+/).filter(word => word.length > 4);
+      return `اشرح الفكرة الواردة في النقطة: «${terms[index % Math.max(1,terms.length)] || 'الفكرة الرئيسية'}»`;
+    });
+    return {summary:points.slice(0,4).join(' '),points,questions};
+  }
+  async function readPdf(file) {
+    if (!window.pdfjsLib) throw new Error('تعذر تحميل قارئ PDF. تحقق من الإنترنت أو الصق نص الدرس.');
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await window.pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+    try {
+      if (pdf.numPages > 2) throw new Error('الملف أكثر من صفحتين. اختر صفحات قليلة أو الصق نص الدرس.');
+      const pages = [];
+      for (let n=1;n<=pdf.numPages;n++) { const page=await pdf.getPage(n); const content=await page.getTextContent(); pages.push(content.items.map(item=>item.str).join(' ')); }
+      const text=pages.join('\n');
+      if (normalize(text).length < 40) throw new Error('لم أجد نصًا قابلًا للقراءة. قد يكون PDF مصورًا؛ الصق النص بدلًا منه.');
+      return text;
+    } finally { await pdf.destroy(); }
+  }
+  fileInput.addEventListener('change', async () => {
+    selectedFile = fileInput.files?.[0] || null;
+    results.hidden = true;
+    if (!selectedFile) return;
+    fileName.textContent = `الملف المختار: ${selectedFile.name}`;
+    if (/\.txt$/i.test(selectedFile.name) || selectedFile.type === 'text/plain') {
+      try { sourceText.value = await selectedFile.text(); setStatus('تمت قراءة الملف النصي. اضغط استخراج الملخص.'); }
+      catch { setStatus('تعذرت قراءة الملف النصي.', true); }
+    } else setStatus('تم اختيار الملف. اضغط استخراج الملخص.');
+  });
+  summarizeBtn.addEventListener('click', async () => {
+    summarizeBtn.disabled = true; results.hidden = true;
+    try {
+      let text = sourceText.value.trim();
+      if (!text && selectedFile) { setStatus('جارٍ قراءة الملف داخل متصفحك...'); text = /\.pdf$/i.test(selectedFile.name) || selectedFile.type === 'application/pdf' ? await readPdf(selectedFile) : await selectedFile.text(); sourceText.value = text; }
+      if (normalize(text).length < 80) throw new Error('أضف نص الدرس أو اختر ملفًا قبل إنشاء الملخص.');
+      setStatus('جارٍ استخراج الأفكار المهمة...');
+      const output = makeSummary(text);
+      $('summary').textContent = output.summary;
+      $('keyPoints').replaceChildren(...output.points.map(point => { const li=document.createElement('li'); li.textContent=point; return li; }));
+      $('reviewQuestions').replaceChildren(...output.questions.map(question => { const li=document.createElement('li'); li.textContent=question; return li; }));
+      results.hidden = false; setStatus('تم تجهيز الملخص. راجعه مع نص الدرس للتأكد من دقته.'); results.scrollIntoView({behavior:'smooth',block:'start'});
+    } catch(error) { setStatus(error.message || 'حدث خطأ أثناء تجهيز الملخص.',true); }
+    finally { summarizeBtn.disabled = false; }
+  });
+  $('clearBtn').addEventListener('click', () => { selectedFile=null; fileInput.value=''; sourceText.value=''; fileName.textContent=''; results.hidden=true; setStatus('تم مسح المحتوى.'); });
+  $('copyBtn').addEventListener('click', async () => {
+    const points=[...document.querySelectorAll('#keyPoints li')].map(li=>`• ${li.textContent}`).join('\n');
+    const questions=[...document.querySelectorAll('#reviewQuestions li')].map(li=>`• ${li.textContent}`).join('\n');
+    const output=`ملخص الدرس\n${$('summary').textContent}\n\nنقاط مهمة\n${points}\n\nأسئلة للمراجعة\n${questions}`;
+    try { await navigator.clipboard.writeText(output); setStatus('تم نسخ الملخص والنقاط.'); } catch { setStatus('تعذر النسخ تلقائيًا؛ يمكنك تحديد النص ونسخه يدويًا.',true); }
+  });
+})();
+</script>
+</body>
+</html>

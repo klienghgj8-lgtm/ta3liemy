@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10192f">
+  <meta name="description" content="تعليمي — منصتك لتنظيم مذاكرتك والاستعداد للصف الأول الثانوي.">
+  <title>تعليمي | خطوتك الأذكى للتفوق</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-art" aria-hidden="true">
+      <div class="art-orb orb-one"></div><div class="art-orb orb-two"></div>
+      <div class="art-grid"></div>
+      <div class="floating-card card-book"><span></span><div><b>تعلّم بذكاء</b><small>كل يوم خطوة لقدّام</small></div></div>
+      <div class="floating-card card-grade"><span class="grade-icon">١</span><div><b> الثانوية</b><small>بداية طريقك للنجاح</small></div></div>
+      <div class="login-art-copy"><div class="brand brand-light"><span class="brand-mark">ت</span><span>تعليمي<span class="brand-dot">.</span></span></div
+      ><h2>مستقبلك يبدأ<br>من هنا.</h2><p>نظّم وقتك، افهم دروسك، وخلّي كل يوم يقربك من حلمك.</p><div class="art-points"><span> خطة على مقاسك</span><span> إجابات من كتبك</span></div></div>
+    </div>
+    <main class="login-panel">
+      <div class="login-mobile-brand brand"><span><span><span class="brand-dot">.</span></span></div>
+      <div class="login-content">
+        <div class="eyebrow"><span class="eyebrow-line"></span> منصتك التعليمية</div>
+        <h1>أهلاً بيك 👋</h1>
+        <p class="login-subtitle">خلّينا نجهّز مساحتك الدراسية في ثواني.</p>
+        <form id="loginForm" class="login-form">
+          <label for="studentName">اسمك إيه؟</label>
+          <div class="input-wrap"><span class="input-icon">👫</span><input id="studentName" name="name" type="text" placeholder="اكتب اسمك بالكامل" autocomplete="name" required maxlength="45"></div>
+          <label for="schoolName">اسم المدرسة</label>
+          <div class="input-wrap"><span class="input-icon">🏫</span><input id="schoolName" name="school" type="text" placeholder="مثال: مدرسة النيل الثانوية" required maxlength="70"></div>
+          <button class="button button-primary login-submit" type="submit">ابدأ رحلتك <span>←</span></button>
+        </form>
+        <div class="login-note"><span>🔒</span> بياناتك محفوظة على جهازك فقط</div>
+      </div>
+      <footer class="login-footer">created by omar gamal</footer>
+    </main>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <a class="brand sidebar-brand" href="#home" aria-label="تعليمي - الرئيسية"><span class="brand-mark">ت</span><span>تعليمي<span class="brand-dot">.</span></span></a>
+      <div class="side-caption">مساحتك الدراسية</div>
+      <nav class="side-nav" aria-label="القائمة الرئيسية">
+        <button class="nav-link active" data-page="home"><span class="nav-icon">🏠</span><span>الرئيسية</span></button>
+        <button class="nav-link" data-page="schedule"><span class="nav-icon">🗓️</span><span>جدول المواد</span></button>
+        <button class="nav-link" data-page="plan"><span class="nav-icon">📋</span><span>خطة المذاكرة</span></button>
+        <a class="nav-link" href="lesson-summary.html"><span class="nav-icon">📝</span><span>لخّص درسًا</span></a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-tip"><div class="tip-spark"></div><b>نصيحة اليوم 💡</b><p>ابدأ بأصعب مادة وأنت لسه في قمة تركيزك.</p></div>
+      <button id="logoutButton" class="logout-button"><span>↪</span> تسجيل الخروج</button>
+      <div class="sidebar-credit">created by omar gamal</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="menuToggle" class="icon-button menu-toggle" aria-label="فتح القائمة">☰</button>
+        <div class="topbar-crumb"><span> الثانوية</span><span class="crumb-divider">/</span><b id="breadcrumbTitle">الرئيسية</b></div>
+        <div class="topbar-actions"><span class="today-chip"><span class="status-dot"></span> <span id="todayDate"></span></span><button class="avatar" id="profileAvatar" aria-label="الملف الشخصي">ط</button></div>
+      </header>
+
+      <div class="page-wrap">
+        <section id="page-home" class="page active-page">
+          <div class="welcome-banner">
+            <div class="welcome-content"><div class="welcome-kicker"><span></span> يوم جديد، فرصة جديدة</div><h1>صباح الخير، <span id="welcomeName">يا بطل</span> 👋</h1><p>كل خطوة صغيرة بتعملها النهارده بتفرق في مستقبلك.</p><button class="button button-white" data-go="schedule">رتّب جدولك <span>←</span></button></div>
+            <div class="welcome-decoration"><div class="deco-circle circle-a"></div><div class="deco-circle circle-b"></div><div class="welcome-book">📝</div><div class="deco-star star-a"></div><div class="deco-star star-b">💫</div></div>
+          </div>
+          <div class="section-heading"><div><div class="eyebrow">نظرة سريعة</div><h2>مساحتك الدراسية</h2></div><span class="school-label"><span>🏫</span><span id="schoolLabel">مدرستك</span></span></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon icon-purple">🗓️</span><span class="stat-trend">هذا الأسبوع</span></div><div class="stat-number" id="statSubjects">0</div><div class="stat-title">مادة في جدولك</div><div class="stat-foot">خلي جدولك دايماً متحدّث</div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon icon-mint">⏱️</span><span class="stat-trend trend-mint">جاهزة ليك</span></div><div class="stat-number" id="statSessions">0</div><div class="stat-title">جلسة مذاكرة</div><div class="stat-foot">في خطتك الأسبوعية</div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon icon-peach">📝</span><span class="stat-trend trend-peach">منهحك</span></div><div class="stat-number" id="statSubjectsTotal">9</div><div class="stat-title">مواد المنهج</div><div class="stat-foot">مادتك تختارها من جدولك</div></article>
+          </div>
+          <div class="home-grid">
+            <article class="panel today-panel"><div class="panel-heading"><div><div class="eyebrow">خليك على المسار</div><h3>جدول النهارده</h3></div><button class="text-button" data-go="schedule">عرض الجدول <span>←</span></button></div><div id="todaySchedule" class="today-schedule"></div></article>
+            <article class="panel school-card"><div class="panel-heading"><div><div class="eyebrow">مكانك المميز</div><h3>مدرستك</h3></div><button id="changeSchoolPhoto" class="icon-button photo-change" aria-label="تغيير صورة المدرسة">✎</button></div><div id="schoolPhoto" class="school-photo"><div class="school-photo-overlay"></div><div class="school-photo-caption"><span class="school-photo-icon">⌂</span><div><b id="schoolPhotoName">مدرستك</b><small>ذكريات وبدايات كبيرة</small></div></div><span class="photo-hint">اضغط ✎ لإضافة صورة مدرستك</span></div><input id="schoolPhotoInput" type="file" accept="image/*" hidden><div class="school-card-foot"><span class="school-foot-dot"></span> الصف الأول الثانوي</div></article>
+          </div>
+          <div class="panel quick-panel"><div class="quick-copy"><div class="eyebrow">أداة مذاكرة</div><h3>لخّص درسًا وحدد المهم</h3><p>ارفع PDF قصيرًا أو الصق نص الدرس؛ التلخيص يعمل داخل متصفحك.</p></div><a class="button button-dark" href="lesson-summary.html">افتح أداة التلخيص <span>←</span></a></div>
+        </section>
+
+        <section id="page-schedule" class="page">
+          <div class="page-heading"><div><div class="eyebrow">نظّم أسبوعك</div><h1>جدول المواد</h1><p>اختر من مواد المنهج التسع، حتى ٧ حصص في اليوم.</p></div><button id="clearSchedule" class="button button-outline">مسح الجدول</button></div>
+          <div class="schedule-note"><span></span><span>المواد المتاحة: العربية، الإنجليزية، الفرنسية، العلوم، التربية الإسلامية، الرياضيات، الفلسفة والمنطق، البرمجة والذكاء الاصطناعي، التاريخ. اختر اليوم والمادة لكل حصة؛ جدولك يُحفظ على جهازك.</span></div>
+          <div id="weekGrid" class="week-grid"></div>
+        </section>
+
+        <section id="page-plan" class="page">
+          <div class="page-heading"><div><div class="eyebrow">خطوة بخطوة</div><h1>خطة المذاكرة</h1><p>خطة أسبوعية مرنة مبنية على المواد اللي في جدولك.</p></div><button id="generatePlan" class="button button-primary"><span></span> ولّد خطة مذاكرة</button></div>
+          <div class="plan-intro"><div class="plan-intro-icon">📚</div><div><b>مذاكرة أذكى، مش ساعات أكتر</b><p>هنقسم موادك لجلسات متوازنة، كل جلسة ٤٥ دقيقة وبينها استراحة.</p></div></div>
+          <div id="studyPlan" class="study-plan"></div>
+        </section>
+
+      </div>
+      <footer class="app-footer">
+    <div class="footer-box">
+        <h2>صُنِع ❤️ بحب لمستقبلك</h2>
+        <p><b>created by omar gamal</b></p>
+        <p class="footer-contact">للواصل وحل المشكلات</p>
+        <p class="footer-email">og545948@gmail.com</p>
+    </div>
+</footer>
+
+
+
+    </main>
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+    <div id="toast" class="toast" role="status"></div>
+  </div>
+</body>
+</html>
